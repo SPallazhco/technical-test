@@ -6,10 +6,10 @@ import lombok.Setter;
 @Setter
 @Getter
 public class RegisterRequest {
-    // Getters y Setters
-    private String username;  // Se utilizará como clientId
+
+    private String username;
     private String password;
-    private String name;      // Nombre de la persona
+    private String name;
     private String gender;
     private Integer age;
     private String identification;

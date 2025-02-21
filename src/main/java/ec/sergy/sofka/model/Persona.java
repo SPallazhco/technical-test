@@ -13,7 +13,7 @@ public class Persona {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id; // Este id se usará en la tabla persona
+    private Integer id;
 
     private String name;
     private String gender;

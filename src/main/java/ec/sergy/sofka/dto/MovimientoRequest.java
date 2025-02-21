@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 public class MovimientoRequest {
-    // Puedes incluir la fecha o asignarla automáticamente en el servicio
+
     private LocalDateTime date;
 
     private String movementType;

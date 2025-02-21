@@ -1,10 +1,12 @@
 package ec.sergy.sofka.dto;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class JwtResponse {
-    // Getter
+
     private String token;
 
     public JwtResponse(String token) {

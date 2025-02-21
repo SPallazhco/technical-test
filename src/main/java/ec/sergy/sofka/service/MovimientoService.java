@@ -18,6 +18,9 @@ import java.util.List;
 @Service
 public class MovimientoService {
 
+    public static final String DEPOSIT = "DEPOSIT";
+    public static final String WITHDRAWAL = "WITHDRAWAL";
+
     @Autowired
     private MovimientoRepository movimientoRepository;
 
@@ -35,8 +38,8 @@ public class MovimientoService {
             throw new CustomException("No se pueden realizar movimientos en una cuenta inactiva");
         }
 
-        if (!movimientoRequest.getMovementType().equalsIgnoreCase("DEPOSIT") &&
-                !movimientoRequest.getMovementType().equalsIgnoreCase("WITHDRAWAL")) {
+        if (!movimientoRequest.getMovementType().equalsIgnoreCase(DEPOSIT) &&
+                !movimientoRequest.getMovementType().equalsIgnoreCase(WITHDRAWAL)) {
             throw new CustomException("Tipo de movimiento no válido. Debe ser DEPOSIT o WITHDRAWAL.");
         }
 
@@ -61,15 +64,13 @@ public class MovimientoService {
 
     private static BigDecimal getBigDecimal(MovimientoRequest movimientoRequest, Cuenta cuenta) {
         BigDecimal nuevoSaldo;
-        if (movimientoRequest.getMovementType().equalsIgnoreCase("WITHDRAWAL")) {
-            // Para retiro, restamos el valor absoluto
+        if (movimientoRequest.getMovementType().equalsIgnoreCase(WITHDRAWAL)) {
             nuevoSaldo = cuenta.getInitialBalance().subtract(movimientoRequest.getValue().abs());
         } else {
-            // Para depósito, sumamos el valor
             nuevoSaldo = cuenta.getInitialBalance().add(movimientoRequest.getValue());
         }
-
-        if (movimientoRequest.getMovementType().equalsIgnoreCase("WITHDRAWAL") && nuevoSaldo.compareTo(BigDecimal.ZERO) < 0) {
+        // Debo validar el saldo negativo Si el saldo es negativo no debo continuar
+        if (movimientoRequest.getMovementType().equalsIgnoreCase(WITHDRAWAL) && nuevoSaldo.compareTo(BigDecimal.ZERO) < 0) {
             throw new CustomException("Saldo insuficiente para realizar el retiro");
         }
         return nuevoSaldo;

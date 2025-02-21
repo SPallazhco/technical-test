@@ -1,5 +1,6 @@
 package ec.sergy.sofka.service;
 
+import ec.sergy.sofka.exception.CustomException;
 import ec.sergy.sofka.model.Cliente;
 import ec.sergy.sofka.repository.ClienteRepository;
 import org.springframework.security.core.userdetails.User;
@@ -21,7 +22,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Cliente cliente = clienteRepository.findByClientId(username);
         if (cliente == null) {
-            throw new UsernameNotFoundException("User not found with username: " + username);
+            throw new CustomException("User not found with username: " + username);
         }
 
         return User.withUsername(cliente.getClientId())
