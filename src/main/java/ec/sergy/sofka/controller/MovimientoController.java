@@ -1,5 +1,6 @@
 package ec.sergy.sofka.controller;
 
+import ec.sergy.sofka.dto.MovimientoRequest;
 import ec.sergy.sofka.dto.TransactionReportRequest;
 import ec.sergy.sofka.model.Movimiento;
 import ec.sergy.sofka.service.MovimientoService;
@@ -22,8 +23,8 @@ public class MovimientoController {
     }
 
     @PostMapping
-    public Movimiento createMovimiento(@RequestBody Movimiento movimiento) {
-        return movimientoService.createMovimiento(movimiento);
+    public Movimiento createMovimiento(@RequestBody MovimientoRequest movimientoRequest) {
+        return movimientoService.createMovimiento(movimientoRequest);
     }
 
     @PutMapping("/{id}")

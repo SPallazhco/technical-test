@@ -32,14 +32,12 @@ public class CuentaServiceTest {
 
     @BeforeEach
     void setUp() {
-        // Configuramos un cliente de ejemplo
+
         cliente = new Cliente();
         cliente.setId(1);
         cliente.setClientId("john.doe");
         cliente.setName("John Doe");
-        // Otros atributos del cliente pueden configurarse según sea necesario
 
-        // Configuramos una cuenta de ejemplo
         cuenta = new Cuenta();
         cuenta.setId(1);
         cuenta.setAccountNumber("123456");
@@ -90,7 +88,8 @@ public class CuentaServiceTest {
         cuentaDetails.setAccountType("Checking");
         cuentaDetails.setInitialBalance(new BigDecimal("1500.00"));
         cuentaDetails.setState(false);
-        // Se asocia el mismo cliente para simplificar
+
+
         cuentaDetails.setCliente(cliente);
 
         Cuenta updatedCuenta = cuentaService.updateCuenta(1, cuentaDetails);

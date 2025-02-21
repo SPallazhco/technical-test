@@ -1,5 +1,10 @@
 package ec.sergy.sofka.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class RegisterResponse {
     private String message;
 
@@ -7,7 +12,4 @@ public class RegisterResponse {
         this.message = message;
     }
 
-    public String getMessage() {
-        return message;
-    }
 }

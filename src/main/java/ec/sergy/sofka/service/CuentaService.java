@@ -17,6 +17,9 @@ public class CuentaService {
 
     // Crear una cuenta
     public Cuenta createCuenta(Cuenta cuenta) {
+        if (cuentaRepository.existsByAccountNumber(cuenta.getAccountNumber())) {
+            throw new CustomException("Cuenta con número " + cuenta.getAccountNumber() + " ya existe");
+        }
         return cuentaRepository.save(cuenta);
     }
 

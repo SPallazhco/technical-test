@@ -1,13 +1,15 @@
 package ec.sergy.sofka.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "cliente")
-@PrimaryKeyJoinColumn(name = "persona_id") // Esta columna es la PK y FK que hace referencia a persona.id
+@PrimaryKeyJoinColumn(name = "persona_id")
 public class Cliente extends Persona {
-
-    // Ya no se define id aquí, se hereda de Persona
 
     @Column(name = "client_id", unique = true, nullable = false)
     private String clientId;
@@ -17,29 +19,4 @@ public class Cliente extends Persona {
 
     private Boolean state;
 
-    // Getters y Setters
-
-    public String getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Boolean getState() {
-        return state;
-    }
-
-    public void setState(Boolean state) {
-        this.state = state;
-    }
 }

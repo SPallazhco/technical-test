@@ -1,5 +1,6 @@
 package ec.sergy.sofka.service;
 
+import ec.sergy.sofka.dto.MovimientoRequest;
 import ec.sergy.sofka.dto.TransactionReportRequest;
 import ec.sergy.sofka.exception.CustomException;
 import ec.sergy.sofka.model.Cuenta;
@@ -24,38 +25,54 @@ public class MovimientoService {
     private CuentaRepository cuentaRepository;
 
     @Transactional
-    public Movimiento createMovimiento(Movimiento movimiento) {
+    public Movimiento createMovimiento(MovimientoRequest movimientoRequest) {
 
-        Cuenta cuenta = cuentaRepository.findById(movimiento.getCuenta().getId())
+        // Buscar la cuenta por accountNumber
+        Cuenta cuenta = cuentaRepository.findByAccountNumber(movimientoRequest.getAccountNumber())
                 .orElseThrow(() -> new CustomException("Cuenta no encontrada"));
 
         if (!Boolean.TRUE.equals(cuenta.getState())) {
             throw new CustomException("No se pueden realizar movimientos en una cuenta inactiva");
         }
 
-        if (!movimiento.getMovementType().equalsIgnoreCase("DEPOSIT") &&
-                !movimiento.getMovementType().equalsIgnoreCase("WITHDRAWAL")) {
+        if (!movimientoRequest.getMovementType().equalsIgnoreCase("DEPOSIT") &&
+                !movimientoRequest.getMovementType().equalsIgnoreCase("WITHDRAWAL")) {
             throw new CustomException("Tipo de movimiento no válido. Debe ser DEPOSIT o WITHDRAWAL.");
         }
 
-        BigDecimal nuevoSaldo;
-        if (movimiento.getMovementType().equalsIgnoreCase("WITHDRAWAL")) {
-            nuevoSaldo = cuenta.getInitialBalance().subtract(movimiento.getValue().abs());
-        } else {
-            nuevoSaldo = cuenta.getInitialBalance().add(movimiento.getValue());
-        }
+        // WITHDRAWAL o DEPOSIT
+        BigDecimal nuevoSaldo = getBigDecimal(movimientoRequest, cuenta);
 
-        if (movimiento.getMovementType().equalsIgnoreCase("WITHDRAWAL") && nuevoSaldo.compareTo(BigDecimal.ZERO) < 0) {
-            throw new CustomException("Saldo insuficiente para realizar el retiro");
-        }
-
+        // Actualizamos el saldo de la cuenta
         cuenta.setInitialBalance(nuevoSaldo);
         cuentaRepository.save(cuenta);
 
+
+        Movimiento movimiento = new Movimiento();
+        movimiento.setMovementType(movimientoRequest.getMovementType());
+        movimiento.setValue(movimientoRequest.getValue());
         movimiento.setBalance(nuevoSaldo);
-        movimiento.setDate(LocalDateTime.now());
+        // Si no se envía la fecha en el request, asignamos la fecha actual
+        movimiento.setDate(movimientoRequest.getDate() != null ? movimientoRequest.getDate() : LocalDateTime.now());
+        movimiento.setCuenta(cuenta);
 
         return movimientoRepository.save(movimiento);
+    }
+
+    private static BigDecimal getBigDecimal(MovimientoRequest movimientoRequest, Cuenta cuenta) {
+        BigDecimal nuevoSaldo;
+        if (movimientoRequest.getMovementType().equalsIgnoreCase("WITHDRAWAL")) {
+            // Para retiro, restamos el valor absoluto
+            nuevoSaldo = cuenta.getInitialBalance().subtract(movimientoRequest.getValue().abs());
+        } else {
+            // Para depósito, sumamos el valor
+            nuevoSaldo = cuenta.getInitialBalance().add(movimientoRequest.getValue());
+        }
+
+        if (movimientoRequest.getMovementType().equalsIgnoreCase("WITHDRAWAL") && nuevoSaldo.compareTo(BigDecimal.ZERO) < 0) {
+            throw new CustomException("Saldo insuficiente para realizar el retiro");
+        }
+        return nuevoSaldo;
     }
 
     public List<Movimiento> getMovimientosByCuenta(Integer cuentaId) {
