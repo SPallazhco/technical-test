@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>ec.sergy</groupId>
-    <artifactId>sofka</artifactId>
+    <artifactId>spring-test</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>sofka</name>
-    <description>sofka</description>
+    <name>spring-test</name>
+    <description>spring-test</description>
     <url/>
     <licenses>
         <license/>
