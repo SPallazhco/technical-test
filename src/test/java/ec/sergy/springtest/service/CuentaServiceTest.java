@@ -35,8 +35,8 @@ public class CuentaServiceTest {
 
         cliente = new Cliente();
         cliente.setId(1);
-        cliente.setClientId("john.doe");
-        cliente.setName("John Doe");
+        cliente.setClientId("sergy.pall");
+        cliente.setName("Sergy Pall");
 
         cuenta = new Cuenta();
         cuenta.setId(1);

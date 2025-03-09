@@ -45,10 +45,8 @@ public class MovimientoService {
         // WITHDRAWAL o DEPOSIT
         BigDecimal nuevoSaldo = getBigDecimal(movimientoRequest, cuenta);
 
-
         cuenta.setInitialBalance(nuevoSaldo);
         cuentaRepository.save(cuenta);
-
 
         Movimiento movimiento = new Movimiento();
         movimiento.setMovementType(movimientoRequest.getMovementType());

@@ -13,10 +13,8 @@ public class JwtUtil {
 
     private static final String SECRET_KEY = "cf63cc58-959d-4219-9d6a-c488a6e5f005";
 
-    // Convertimos la clave en una SecretKey válida
     private final SecretKey key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
 
-    // Genera un token con el username
     public String generateToken(String username) {
         return Jwts.builder()
                 .subject(username)
@@ -26,7 +24,6 @@ public class JwtUtil {
                 .compact();
     }
 
-    // Obtiene el username desde el token
     public String getUsernameFromToken(String token) {
         JwtParser parser = Jwts.parser()
                 .verifyWith(key)
@@ -34,16 +31,14 @@ public class JwtUtil {
         return parser.parseSignedClaims(token).getPayload().getSubject();
     }
 
-    // Valida si el token es correcto
     public boolean validateToken(String token, String username) {
         try {
             return getUsernameFromToken(token).equals(username) && !isTokenExpired(token);
         } catch (JwtException e) {
-            return false; // Token inválido o mal formado
+            return false;
         }
     }
 
-    // Verifica si el token ha expirado
     private boolean isTokenExpired(String token) {
         JwtParser parser = Jwts.parser()
                 .verifyWith(key)
